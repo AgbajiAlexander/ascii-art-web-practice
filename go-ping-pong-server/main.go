@@ -50,15 +50,15 @@ func calculateHandler(w http.ResponseWriter, r *http.Request) {
 	bStr := r.URL.Query().Get("b")
 
 	aNum, err := strconv.Atoi(aStr)
-		if err != nil {
-    		http.Error(w, "Invalid number for 'a'", http.StatusBadRequest)
-    		return
+	if err != nil {
+		http.Error(w, "Invalid number for 'a'", http.StatusBadRequest)
+		return
 	}
 
 	bNum, err := strconv.Atoi(bStr)
-		if err != nil {
-    		http.Error(w, "Invalid number for 'b'", http.StatusBadRequest)
-    		return
+	if err != nil {
+		http.Error(w, "Invalid number for 'b'", http.StatusBadRequest)
+		return
 	}
 
 	var result int
@@ -86,7 +86,7 @@ func agentHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "You are visiting us using: %s", userAgent)
 }
 
-func dashboardHandler (w http.ResponseWriter, r *http.Request) {
+func dashboardHandler(w http.ResponseWriter, r *http.Request) {
 	clientKey := r.Header.Get("X-API-Key")
 	if clientKey != "secret123" {
 		http.Error(w, "Unauthorized:", http.StatusUnauthorized)
@@ -102,6 +102,9 @@ func legacyHandler(w http.ResponseWriter, r *http.Request) {
 func v2Handler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprint(w, "Welcome to version 2")
 }
+func methodInspectorHandler(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "Yon made a %s request", r.Method)
+}
 
 func main() {
 	http.HandleFunc("/ping", pingHandler)
@@ -112,6 +115,7 @@ func main() {
 	http.HandleFunc("/dashboard", dashboardHandler)
 	http.HandleFunc("/legacy", legacyHandler)
 	http.HandleFunc("/v2", v2Handler)
+	http.HandleFunc("/method-inspector", methodInspectorHandler)
 
 	fmt.Print("Starting server on :8080...")
 	http.ListenAndServe(":8080", nil)
